@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyFlow — Plan. Focus. Progress.</title>
+  <meta name="description" content="StudyFlow is a student productivity dashboard for planning tasks, tracking grades, and staying focused with a built-in Pomodoro timer.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ HEADER / NAV ============ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◆</span>
+        <div class="brand-text">
+          <span class="brand-name">StudyFlow</span>
+          <span class="brand-tagline">Plan. Focus. Progress.</span>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#dashboard" class="nav-link active-link" data-nav="dashboard">Dashboard</a></li>
+          <li><a href="#tasks" class="nav-link" data-nav="tasks">Tasks</a></li>
+          <li><a href="#calendar" class="nav-link" data-nav="calendar">Calendar</a></li>
+          <li><a href="#pomodoro" class="nav-link" data-nav="pomodoro">Pomodoro</a></li>
+          <li><a href="#grades" class="nav-link" data-nav="grades">Grades</a></li>
+          <li><a href="#progress" class="nav-link" data-nav="progress">Progress</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" id="themeToggle" class="icon-btn" aria-pressed="false" aria-label="Toggle dark mode">
+          <span class="theme-icon" aria-hidden="true">🌙</span>
+        </button>
+        <button type="button" id="navToggle" class="icon-btn nav-toggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+          <span aria-hidden="true">☰</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <nav id="mobileNav" class="mobile-nav" aria-label="Mobile Primary">
+      <ul>
+        <li><a href="#dashboard" class="nav-link" data-nav="dashboard">Dashboard</a></li>
+        <li><a href="#tasks" class="nav-link" data-nav="tasks">Tasks</a></li>
+        <li><a href="#calendar" class="nav-link" data-nav="calendar">Calendar</a></li>
+        <li><a href="#pomodoro" class="nav-link" data-nav="pomodoro">Pomodoro</a></li>
+        <li><a href="#grades" class="nav-link" data-nav="grades">Grades</a></li>
+        <li><a href="#progress" class="nav-link" data-nav="progress">Progress</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="mainContent">
+
+    <!-- ============ DASHBOARD ============ -->
+    <section id="dashboard" class="page-section" aria-labelledby="greetingText">
+      <div class="section-inner">
+
+        <div class="dashboard-hero">
+          <div class="hero-text">
+            <p class="eyebrow">Today</p>
+            <h1 id="greetingText" class="greeting">Good morning, Student 👋</h1>
+            <p class="current-date" id="currentDate">Loading date…</p>
+            <p class="hero-sub">Let's make today productive.</p>
+          </div>
+          <div class="hero-quote card" id="quoteCard">
+            <p class="quote-label">Today's motivation</p>
+            <p class="quote-text" id="quoteText">Small progress is still progress.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card card">
+            <span class="stat-label">Pending</span>
+            <span class="stat-value" id="statPending">0</span>
+            <span class="stat-icon" aria-hidden="true">📋</span>
+          </div>
+          <div class="stat-card card">
+            <span class="stat-label">Completed</span>
+            <span class="stat-value" id="statCompleted">0</span>
+            <span class="stat-icon" aria-hidden="true">✅</span>
+          </div>
+          <div class="stat-card card">
+            <span class="stat-label">Upcoming (7 days)</span>
+            <span class="stat-value" id="statUpcoming">0</span>
+            <span class="stat-icon" aria-hidden="true">🗓️</span>
+          </div>
+          <div class="stat-card card accent-card">
+            <span class="stat-label">Overall Progress</span>
+            <span class="stat-value" id="statProgress">0%</span>
+            <span class="stat-icon" aria-hidden="true">📈</span>
+          </div>
+        </div>
+
+        <div class="dashboard-lower">
+          <div class="card dashboard-panel">
+            <div class="panel-header">
+              <h2>Today's Tasks</h2>
+              <a href="#tasks" class="text-link" data-nav="tasks">View all →</a>
+            </div>
+            <ul class="mini-task-list" id="todayTaskList">
+              <li class="empty-state">No tasks due today. Enjoy the breathing room.</li>
+            </ul>
+          </div>
+
+          <div class="card dashboard-panel pomodoro-quick">
+            <div class="panel-header">
+              <h2>Quick Focus</h2>
+              <a href="#pomodoro" class="text-link" data-nav="pomodoro">Open timer →</a>
+            </div>
+            <p class="quick-timer-display" id="quickTimerDisplay">25:00</p>
+            <p class="quick-timer-mode" id="quickTimerMode">Study session ready</p>
+            <button type="button" class="btn btn-primary" id="quickStartBtn">Start focusing</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TASKS ============ -->
+    <section id="tasks" class="page-section" aria-labelledby="tasks-heading">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Stay on top of it</p>
+          <h2 id="tasks-heading">Task Manager</h2>
+        </div>
+
+        <div class="tasks-layout">
+          <form id="taskForm" class="card task-form" novalidate>
+            <h3 id="taskFormTitle">Add a new task</h3>
+            <input type="hidden" id="taskId" value="">
+
+            <div class="form-row">
+              <label for="taskTitle">Title</label>
+              <input type="text" id="taskTitle" name="taskTitle" placeholder="e.g. Finish DBMS assignment" required>
+              <span class="field-error" id="taskTitleError" role="alert"></span>
+            </div>
+
+            <div class="form-row">
+              <label for="taskDetails">Details (optional)</label>
+              <textarea id="taskDetails" name="taskDetails" rows="2" placeholder="Any extra notes…"></textarea>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="taskSubject">Subject</label>
+                <select id="taskSubject" name="taskSubject">
+                  <option value="Data Structures">Data Structures</option>
+                  <option value="Computer Networks">Computer Networks</option>
+                  <option value="Computer Organization & Assembly Language">Computer Organization &amp; Assembly Language</option>
+                  <option value="Database Systems">Database Systems</option>
+                  <option value="Digital Logic Design">Digital Logic Design</option>
+                  <option value="Probability & Statistics">Probability &amp; Statistics</option>
+                  <option value="Entrepreneurship">Entrepreneurship</option>
+                  <option value="General">General</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="taskPriority">Priority</label>
+                <select id="taskPriority" name="taskPriority">
+                  <option value="High">🔴 High</option>
+                  <option value="Medium" selected>🟡 Medium</option>
+                  <option value="Low">🟢 Low</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="taskDueDate">Due date</label>
+              <input type="date" id="taskDueDate" name="taskDueDate" required>
+              <span class="field-error" id="taskDueDateError" role="alert"></span>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="taskSubmitBtn">Add Task</button>
+              <button type="button" class="btn btn-ghost" id="taskCancelEdit" hidden>Cancel edit</button>
+            </div>
+          </form>
+
+          <div class="task-list-area">
+            <div class="task-controls card">
+              <div class="form-row search-row">
+                <label for="taskSearch" class="sr-only">Search tasks</label>
+                <input type="search" id="taskSearch" placeholder="Search tasks…">
+              </div>
+              <div class="filter-row" role="group" aria-label="Filter tasks">
+                <button type="button" class="chip filter-chip active-chip" data-filter="all">All</button>
+                <button type="button" class="chip filter-chip" data-filter="pending">Pending</button>
+                <button type="button" class="chip filter-chip" data-filter="completed">Completed</button>
+                <button type="button" class="chip filter-chip" data-filter="High">High</button>
+                <button type="button" class="chip filter-chip" data-filter="Medium">Medium</button>
+                <button type="button" class="chip filter-chip" data-filter="Low">Low</button>
+              </div>
+              <div class="form-row subject-filter-row">
+                <label for="subjectFilter" class="sr-only">Filter by subject</label>
+                <select id="subjectFilter">
+                  <option value="all">All subjects</option>
+                  <option value="Data Structures">Data Structures</option>
+                  <option value="Computer Networks">Computer Networks</option>
+                  <option value="Computer Organization & Assembly Language">Computer Organization &amp; Assembly Language</option>
+                  <option value="Database Systems">Database Systems</option>
+                  <option value="Digital Logic Design">Digital Logic Design</option>
+                  <option value="Probability & Statistics">Probability &amp; Statistics</option>
+                  <option value="Entrepreneurship">Entrepreneurship</option>
+                  <option value="General">General</option>
+                </select>
+              </div>
+            </div>
+
+            <ul class="task-list" id="taskList" aria-live="polite">
+              <!-- Tasks injected by JS -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CALENDAR ============ -->
+    <section id="calendar" class="page-section" aria-labelledby="calendar-heading">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">The week ahead</p>
+          <h2 id="calendar-heading">Weekly Calendar</h2>
+        </div>
+
+        <div class="calendar-scroll">
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- 7 day columns injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ POMODORO ============ -->
+    <section id="pomodoro" class="page-section" aria-labelledby="pomodoro-heading">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Deep work</p>
+          <h2 id="pomodoro-heading">Pomodoro Timer</h2>
+        </div>
+
+        <div class="pomodoro-layout">
+          <div class="card pomodoro-card">
+            <p class="pomodoro-mode-label" id="pomodoroModeLabel">Study Session</p>
+            <div class="timer-ring" id="timerRing">
+              <span class="timer-display" id="timerDisplay">25:00</span>
+            </div>
+            <div class="pomodoro-controls">
+              <button type="button" class="btn btn-primary" id="startBtn">Start</button>
+              <button type="button" class="btn btn-ghost" id="pauseBtn" disabled>Pause</button>
+              <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
+            </div>
+            <p class="pomodoro-status" id="pomodoroStatus" role="status" aria-live="polite">Ready when you are.</p>
+          </div>
+
+          <div class="card pomodoro-settings">
+            <h3>Session length</h3>
+            <div class="form-row">
+              <label for="studyLength">Study minutes</label>
+              <input type="number" id="studyLength" min="1" max="120" value="25">
+            </div>
+            <div class="form-row">
+              <label for="breakLength">Break minutes</label>
+              <input type="number" id="breakLength" min="1" max="60" value="5">
+            </div>
+            <button type="button" class="btn btn-secondary" id="applySettingsBtn">Apply settings</button>
+            <p class="settings-hint">Applies the next time the timer resets or switches mode.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GRADES ============ -->
+    <section id="grades" class="page-section" aria-labelledby="grades-heading">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Know your standing</p>
+          <h2 id="grades-heading">Grade Tracker &amp; Calculator</h2>
+        </div>
+
+        <div class="grades-layout">
+          <form id="gradeForm" class="card grade-form" novalidate>
+            <h3>Add a result</h3>
+            <div class="form-row">
+              <label for="gradeSubject">Subject</label>
+              <select id="gradeSubject">
+                <option value="Data Structures">Data Structures</option>
+                <option value="Computer Networks">Computer Networks</option>
+                <option value="Computer Organization & Assembly Language">Computer Organization &amp; Assembly Language</option>
+                <option value="Database Systems">Database Systems</option>
+                <option value="Digital Logic Design">Digital Logic Design</option>
+                <option value="Probability & Statistics">Probability &amp; Statistics</option>
+                <option value="Entrepreneurship">Entrepreneurship</option>
+              </select>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="obtainedMarks">Obtained marks</label>
+                <input type="number" id="obtainedMarks" min="0" step="0.01" required>
+              </div>
+              <div class="form-row">
+                <label for="totalMarks">Total marks</label>
+                <input type="number" id="totalMarks" min="1" step="0.01" required>
+              </div>
+            </div>
+            <span class="field-error" id="gradeError" role="alert"></span>
+            <button type="submit" class="btn btn-primary">Add Result</button>
+          </form>
+
+          <div class="card grade-table-card">
+            <h3>Results</h3>
+            <div class="table-scroll">
+              <table class="grade-table" id="gradeTable">
+                <thead>
+                  <tr>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Marks</th>
+                    <th scope="col">Percentage</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col"><span class="sr-only">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody id="gradeTableBody">
+                  <tr class="empty-row">
+                    <td colspan="5">No results yet. Add one to see it calculated here.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="overall-result" id="overallResult">
+              <span>Overall Result</span>
+              <strong id="overallPercentage">—</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROGRESS ============ -->
+    <section id="progress" class="page-section" aria-labelledby="progress-heading">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">The bigger picture</p>
+          <h2 id="progress-heading">Progress Tracker</h2>
+        </div>
+
+        <div class="card progress-overall">
+          <div class="progress-header">
+            <span>Overall Completion</span>
+            <span id="overallProgressLabel">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="overallProgressFill"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="subject-progress-title">Subject-wise Progress</h3>
+          <div id="subjectProgressList" class="subject-progress-list">
+            <!-- injected by JS -->
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="subject-progress-title">This Week</h3>
+          <div class="progress-header">
+            <span>Tasks completed this week</span>
+            <span id="weeklyProgressLabel">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill accent-fill" id="weeklyProgressFill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-inner footer-inner">
+      <p>StudyFlow — built for the DecodeLabs Full Stack Development Internship, Project 1.</p>
+      <p class="footer-sub">Plan. Focus. Progress.</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
